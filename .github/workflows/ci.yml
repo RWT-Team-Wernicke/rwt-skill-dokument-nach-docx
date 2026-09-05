@@ -1,0 +1,55 @@
+name: Skript-Pruefung
+
+# Prueft bei jedem Push und Pull-Request, ob die drei Extraktor-Skripte
+# syntaktisch korrekt sind, sich importieren lassen und ihre --help-Ausgabe
+# erzeugen. Zusaetzlich wird ein PDF- und XLSX-Rundlauf mit den mitgelieferten
+# Beispieldaten gefahren.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pruefung:
+    name: Syntax, Import und Rundlauf
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Abhaengigkeiten installieren
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r scripts/requirements.txt
+
+      - name: Syntaxpruefung aller Python-Dateien
+        run: python -m compileall -q scripts/
+
+      - name: --help pro Skript aufrufen (Import- und Argparse-Pruefung)
+        run: |
+          python scripts/extract_pdf.py --help
+          python scripts/extract_pptx.py --help
+          python scripts/extract_xlsx.py --help
+
+      - name: PDF-Rundlauf mit Beispieldaten
+        run: |
+          mkdir -p out
+          python scripts/extract_pdf.py \
+            --input assets/260828_Schulung_Mailverlauf_Nordmark.pdf \
+            --outdir out/
+          test -f out/260828_Schulung_Mailverlauf_Nordmark.docx
+
+      - name: XLSX-Rundlauf mit Beispieldaten
+        run: |
+          python scripts/extract_xlsx.py \
+            --input assets/beispiel_beteiligungen.xlsx \
+            --outdir out/
+          test -f out/beispiel_beteiligungen.docx
+          echo "Alle erwarteten Ausgabedateien vorhanden."
