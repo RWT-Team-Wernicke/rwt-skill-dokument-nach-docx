@@ -1,0 +1,14 @@
+# Verantwortliche fuer Reviews und fachliche Freigaben
+# Uebergangsstand (Repo laeuft ueber persoenlichen GitHub-Account von Daniel Wernicke).
+# Nach Umzug in die RWT-GitHub-Organisation: Handles auf Team-Handles anpassen,
+# z. B. @rwt-gruppe/ki-team.
+
+# Alle Aenderungen brauchen Review durch den Skill-Verantwortlichen
+* @TaxMax69
+
+# Aenderungen an Skripten zusaetzlich technisch pruefen
+/scripts/ @TaxMax69
+
+# Aenderungen am SKILL.md und an den Referenzen fachlich pruefen
+/SKILL.md @TaxMax69
+/references/ @TaxMax69
